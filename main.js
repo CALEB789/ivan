@@ -10,7 +10,7 @@ app.get('/',(req,res)=>{
 app.get('/editor',(req,res)=>{
 res.sendFile(path.join(initial_path,"editor.html"))
 })
-app.get('/:blogId',(req,res)=>{
+app.get('/blogs/:blogId',(req,res)=>{
   res.sendFile(path.join(initial_path,"blog.html"))
 })
 app.use((req,res)=>{
