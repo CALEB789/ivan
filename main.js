@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path')
-let initial_path = path.join(__dirname)
+let initial_path = __dirname
 const port = process.env.PORT || 4000
 const app = express()
 app.use(express.static(initial_path))
