@@ -1,9 +1,9 @@
 const path = require('path');
 module.exports = {
-  entry: './js/blog.js',
+  entry: './js/home.js',
   output: {
-    path: path.resolve("public", 'dist'),
-    filename: 'blog.js'
+    path: path.resolve("public", 'dist2'),
+    filename: 'bundle.js'
   },
   devtool: 'eval-source-map',
 };

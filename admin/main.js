@@ -14,7 +14,7 @@ const firebaseConfig = {
 };
 const blogPar = document.getElementById('blog-par')
 const blogImage = document.getElementById('blog-image')
-const titleBlog = document.getElementById('blog-title')
+const titleBlog = document.getElementById('title')
 const deleteBlog = document.getElementById('delete')
 const cont = document.getElementById('cont')
 const app = initializeApp(firebaseConfig);
@@ -27,7 +27,7 @@ const title = document.querySelector('.title');
 const article = document.querySelector('.article')
 const bannerImage = document.getElementById('banner-upload')
 const banner = document.querySelector('.banner')
-const publish = document.querySelector('.publish-btn')
+const publish = document.getElementById("publish")
 const upload = document.getElementById("image-upload")
 var image = []
 const collectionRef = collection(db,"blog-posts")
@@ -42,13 +42,14 @@ reader.readAsDataURL(this.files[0]);
 })
 publish.addEventListener('click',()=>{
   setDoc(doc(collectionRef,title.value.split(" ").join("-")),{
-    blogTitle:title.innerHTML,
-     blogPost:article.innerHTML,
+    blogTitle:title.value,
+     blogPost:article.value,
      bannerImage:image[0],
      publishedAt:serverTimestamp()
      }).then((res)=>{
        location.href = `/${title.value.split(" ").join('-')}`
      })
   })
-  querySnap.then((docs)=>{
-  })
+querySnap.then((docs)=>{
+    
+      })

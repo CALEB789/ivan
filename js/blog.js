@@ -26,32 +26,21 @@ docu.then((docs)=>{
     location.replace('/')
   }
 })
+const open = document.getElementById("open")
 const setupBlog = (data)=>{
-  const banner = document.querySelector('.banner')
-  const blogtt = document.querySelector('.title')
+  const banner = document.getElementById('banner')
+  const blogtt = document.getElementById('title')
   const titleTag = document.querySelector('title')
-  const publish = document.querySelector('.pub')
-  banner.style.backgroundImage = `url(${data.bannerImage})`
+  const publish = document.getElementById('pub')
+  const par = document.getElementById("par")
+  par.innerHTML = data.blogPost
+  banner.src =data.bannerImage
   titleTag.innerHTML += blogtt.innerHTML = data.blogTitle
-  blogtt.innerHTML = data.blogTitle
+  blogtt.innerTEXT = data.blogTitle
 publish.innerHTML += data.publishedAt.toDate()
 const article = document.querySelector('.article')
 addArticle(article,data.blogPost)
 }
 const addArticle = (ele,data)=>{
   data = data.split('\n').filter(item => item.length)
-  data.forEach(item => {
-    if(item[0] == "#"){
-      let hCount = 0
-      let i = 0
-      while(item[i] =="#"){
-        hCount++
-        i++
-      }
-      let tag = `h${hCount}`
-      ele.innerHTML += `< ${tag}>${item.slice(hCount,item.length)}</${tag}>`
-    }else{
-      ele.innerHTML += `<p>${item}</p>`
-    }
-  })
 }

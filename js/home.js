@@ -12,25 +12,42 @@ const firebaseConfig = {
   appId: "1:821571669081:web:9d37c68efaea563516f548",
   measurementId: "G-GVPCFPBMSF"
 };
-const head  = document.getElementById('head')
-var ImageCont = document.getElementById('image')
-var par = document.getElementById('par')
-const img = document.getElementById('img')
+const author = document.querySelectorAll('.author')
+author.innerTEXT = "DJ LUWOMBO BOY"
+const par = document.getElementById("par")
+const menu = document.getElementById("menu")
+const close = document.getElementById("close")
+const img = document.getElementById("banner")
+const heading = document.getElementById("title")
+const site = document.createElement("a")
+const post = document.querySelectorAll(".recent .post")
+const head = document.querySelectorAll(".recent h3")
+alert(post.length)
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app)
 const orderRef = collection(db,"blog-posts")
 const q = query(orderRef,orderBy('publishedAt'))
 const querySnap = getDocs(q)
+close.addEventListener('click',()=>{
+  close.classList.toggle('open')
+  menu.classList.toggle('flex')
+  menu.classList.toggle("hidden")
+}) 
 querySnap.then((docs)=>{
   docs.forEach(doc =>{
     const data = doc.data()
-    head.innerHTML =  data.blogTitle
+    heading.innerHTML =  data.blogTitle
     img.src = data.bannerImage
     par.innerHTML = data.blogPost
+    post.forEach((a)=>{
+        a.src = data.bannerImage
+    })
+    head.forEach((c)=>{
+      c.innerTEXT = data.blogTitle
+    })
   })
-<<<<<<< HEAD
 })
-=======
+querySnap.then((posts)=>{
+     
 })
->>>>>>> a8c005c (first commit)
