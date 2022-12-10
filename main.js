@@ -9,7 +9,7 @@ app.get('/',(req,res)=>{
   res.sendFile(path.join(initial_path,"index.html"))
 });
 
-app.get("caleb/admin",(req,res)=>{
+app.get("/admin",(req,res)=>{
     res.sendFile(path.join("admin","index.html"))
 })
 app.get('/:blogId',(req,res)=>{

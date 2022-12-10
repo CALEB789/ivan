@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import {getFirestore} from 'firebase/firestore';
+import {arrayRemove, getFirestore} from 'firebase/firestore';
 import {doc,collection,getDocs,query,orderBy} from 'firebase/firestore'
 const firebaseConfig = {
   apiKey: "AIzaSyAH5LY2CS1KqvC8H-_j6YUOD_WPcMfJetc",
@@ -19,10 +19,8 @@ const menu = document.getElementById("menu")
 const close = document.getElementById("close")
 const img = document.getElementById("banner")
 const heading = document.getElementById("title")
-const site = document.createElement("a")
 const post = document.querySelectorAll(".recent .post")
 const head = document.querySelectorAll(".recent h3")
-alert(post.length)
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app)
@@ -34,20 +32,32 @@ close.addEventListener('click',()=>{
   menu.classList.toggle('flex')
   menu.classList.toggle("hidden")
 }) 
+const tiles = []
+const summ = []
+const blogImage = []
 querySnap.then((docs)=>{
   docs.forEach(doc =>{
     const data = doc.data()
     heading.innerHTML =  data.blogTitle
     img.src = data.bannerImage
     par.innerHTML = data.blogPost
-    post.forEach((a)=>{
-        a.src = data.bannerImage
-    })
-    head.forEach((c)=>{
-      c.innerTEXT = data.blogTitle
-    })
+    tiles.push(data.blogTitle)
+    summ.push(data.blogPost)
+    blogImage.push(data.bannerImage)
   })
+
+for(let h = 0; h<blogImage.length;h++){
+  post.forEach((g)=>{
+    post[0].src= blogImage[blogImage.length-1]
+  })
+  for(let i = 0;i<tiles.length;i++){
+    for(let v = 0; v<head.length;v++){
+             head[0].innerHTML = tiles[tiles.length-1]
+             head[1].innerHTML = tiles[0]
+             head[2].innerHTML = tiles[1]
+             head[3].innerHTML = tiles[2]
+    }
+  }
+   }
 })
-querySnap.then((posts)=>{
-     
-})
+

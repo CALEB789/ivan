@@ -9,7 +9,7 @@
   "scripts": {
     "watch": "webpack --watch",
     "build": "webpack --mode=development",
-    "go": "tailwindcss -i ./admin/style.css -o ./admin/main.css",
+    "go": "tailwindcss -i ./input.css -o ./css/main.css",
     "wa": "tailwindcss -i ./input.css -o ./css/main.css --watch",
     "start": "nodemon main.js"
   },

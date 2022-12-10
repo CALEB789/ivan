@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
+import { getStorage, ref,uploadBytesResumable } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
-import {getAuth,createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPopup}from "firebase/auth"
 import {getFirestore,collection,setDoc,doc,serverTimestamp,query,orderBy,getDocs,deleteDoc} from 'firebase/firestore';
 const firebaseConfig = {
   apiKey: "AIzaSyAH5LY2CS1KqvC8H-_j6YUOD_WPcMfJetc",
@@ -12,6 +12,7 @@ const firebaseConfig = {
   appId: "1:821571669081:web:9d37c68efaea563516f548",
   measurementId: "G-GVPCFPBMSF"
 };
+
 const blogPar = document.getElementById('blog-par')
 const blogImage = document.getElementById('blog-image')
 const titleBlog = document.getElementById('blog-title')
@@ -20,6 +21,7 @@ const cont = document.getElementById('cont')
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app)
+const storage = getStorage(app);
 const orderRef = collection(db,"blog-posts")
 const q = query(orderRef,orderBy('publishedAt'))
 const querySnap = getDocs(q)
@@ -30,15 +32,35 @@ const banner = document.querySelector('.banner')
 const publish = document.querySelector('.publish-btn')
 const upload = document.getElementById("image-upload")
 var image = []
+const mountainsRef = ref(storage, 'mountains.jpg');
 const collectionRef = collection(db,"blog-posts")
 bannerImage.addEventListener("change", function() {
   const reader = new FileReader();
-  reader.addEventListener("load", () => {
+  const storageRef = ref(storage, `images/${this.files[0]}`)
     const uploaded_image = reader.result;
+    const uploadTask = uploadBytesResumable(storageRef, this.files[0]);
     banner.style.backgroundImage = `url(${uploaded_image})`;
-    image.push(uploaded_image)
-})
-reader.readAsDataURL(this.files[0]);
+    ;
+    uploadTask.on('state_changed', 
+    (snapshot) => {
+      // Observe state change events such as progress, pause, and resume
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log('Upload is ' + progress + '% done');
+      switch (snapshot.state) {
+        case 'paused':
+          console.log('Upload is paused');
+          break;
+        case 'running':
+          console.log('Upload is running');
+          break;
+      }
+    }, 
+    (error) => {
+      // Handle unsuccessful uploads
+    }
+    )
+
 })
 publish.addEventListener('click',()=>{
   setDoc(doc(collectionRef,title.value.split(" ").join("-")),{
@@ -49,6 +71,4 @@ publish.addEventListener('click',()=>{
      }).then((res)=>{
        location.href = `/${title.value.split(" ").join('-')}`
      })
-  })
-  querySnap.then((docs)=>{
   })
