@@ -12,11 +12,7 @@ const firebaseConfig = {
   appId: "1:821571669081:web:9d37c68efaea563516f548",
   measurementId: "G-GVPCFPBMSF"
 };
-
-const blogPar = document.getElementById('blog-par')
-const blogImage = document.getElementById('blog-image')
-const titleBlog = document.getElementById('blog-title')
-const deleteBlog = document.getElementById('delete')
+var bg
 const cont = document.getElementById('cont')
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
@@ -26,18 +22,14 @@ const orderRef = collection(db,"blog-posts")
 const q = query(orderRef,orderBy('publishedAt'))
 const querySnap = getDocs(q)
 const title = document.querySelector('.title');
-const article = document.getElementById('article')
+const article = document.getElementById('text')
 const bannerImage = document.getElementById('banner-upload')
 const banner = document.querySelector('.banner')
 const publish = document.getElementById('publish')
 const upload = document.getElementById("image-upload")
 const collectionRef = collection(db,"blog-posts")
 bannerImage.addEventListener("change",() =>{
-  const reader = new FileReader();
-    const uploaded_image = reader.result;
-    image.push(uploaded_image)
     const storageRef = ref(storage, `blogImages/${bannerImage.files[0].name}`);
-
     const uploadTask = uploadBytesResumable(storageRef, bannerImage.files[0]);
     uploadTask.on('state_changed', 
       (snapshot) => {
@@ -58,19 +50,18 @@ bannerImage.addEventListener("change",() =>{
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           banner.style.backgroundImage = `url(${downloadURL})`
-          console.log('File available at', downloadURL);
-          publish.addEventListener('click',()=>{
-            setDoc(doc(collectionRef,title.value.split(" ").join("-")),{
-              blogTitle:title.innerHTML,
-               blogPost:article.innerHTML,
-               bannerImage:downloadURL,
-               publishedAt:serverTimestamp()
-               }).then((res)=>{
-                 location.href = `/${title.value.split(" ").join('-')}`
-               })
-            })
+          bg = downloadURL
         });
       }
     );
     
 })
+publish.addEventListener('click',()=>{
+  setDoc(doc(collectionRef,title.value.split(" ").join("-")),{
+     blogPost:article.innerHTML,
+     bannerImage:bg,
+     publishedAt:serverTimestamp()
+     }).then((res)=>{
+       location.href = `/${title.value.split(" ").join('-')}`
+     })
+  })
