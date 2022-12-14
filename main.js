@@ -2,7 +2,7 @@ const express = require('express')
 const path = require('path')
 let initial_path = __dirname
 let admin = "admin"
-const port = process.env.PORT || 4000
+const port = process.env.PORT 
 const app = express()
 app.use(express.static(initial_path))
 app.get('/',(req,res)=>{
