@@ -8,12 +8,13 @@
   },
   "scripts": {
     "watch": "webpack --watch",
-    "build": "webpack --mode=development",
+    "build": "webpack  --mode=production",
     "go": "tailwindcss -i ./input.css -o ./css/main.css",
     "wa": "tailwindcss -i ./input.css -o ./css/main.css --watch",
     "start": "nodemon main.js"
   },
   "devDependencies": {
+    "babel-plugin-import": "^1.13.5",
     "tailwindcss": "^3.2.4",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0"

@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref,uploadBytesResumable } from "firebase/storage";
+import { getStorage, ref,uploadBytesResumable,getDownloadURL} from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
-import {getFirestore,collection,setDoc,doc,serverTimestamp,query,orderBy,getDocs,deleteDoc} from 'firebase/firestore';
+import {getFirestore,collection,setDoc,doc,serverTimestamp,query,orderBy,getDocs} from 'firebase/firestore';
 const firebaseConfig = {
   apiKey: "AIzaSyAH5LY2CS1KqvC8H-_j6YUOD_WPcMfJetc",
   authDomain: "dj-luwombo.firebaseapp.com",
@@ -26,47 +26,51 @@ const orderRef = collection(db,"blog-posts")
 const q = query(orderRef,orderBy('publishedAt'))
 const querySnap = getDocs(q)
 const title = document.querySelector('.title');
-const article = document.querySelector('.article')
+const article = document.getElementById('article')
 const bannerImage = document.getElementById('banner-upload')
 const banner = document.querySelector('.banner')
-const publish = document.querySelector('.publish-btn')
+const publish = document.getElementById('publish')
 const upload = document.getElementById("image-upload")
-var image = []
-const mountainsRef = ref(storage, 'mountains.jpg');
 const collectionRef = collection(db,"blog-posts")
-bannerImage.addEventListener("change", function() {
-  const storageRef = ref(storage, `images/${this.files[0]}`)
-    const uploadTask = uploadBytesResumable(storageRef, this.files[0]);
-    banner.style.backgroundImage = `url(${uploaded_image})`;
-    ;
-    uploadTask.on('state_changed', 
-    (snapshot) => {
-      // Observe state change events such as progress, pause, and resume
-      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log('Upload is ' + progress + '% done');
-      switch (snapshot.state) {
-        case 'paused':
-          console.log('Upload is paused');
-          break;
-        case 'running':
-          console.log('Upload is running');
-          break;
-      }
-    }, 
-    (error) => {
-      alert("error occured")
-    }
-    )
+bannerImage.addEventListener("change",() =>{
+  const reader = new FileReader();
+    const uploaded_image = reader.result;
+    image.push(uploaded_image)
+    const storageRef = ref(storage, `blogImages/${bannerImage.files[0].name}`);
 
+    const uploadTask = uploadBytesResumable(storageRef, bannerImage.files[0]);
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      }, 
+      (error) => {
+        alert("AN ERROR OCCURED")
+      }, 
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          banner.style.backgroundImage = `url(${downloadURL})`
+          console.log('File available at', downloadURL);
+          publish.addEventListener('click',()=>{
+            setDoc(doc(collectionRef,title.value.split(" ").join("-")),{
+              blogTitle:title.innerHTML,
+               blogPost:article.innerHTML,
+               bannerImage:downloadURL,
+               publishedAt:serverTimestamp()
+               }).then((res)=>{
+                 location.href = `/${title.value.split(" ").join('-')}`
+               })
+            })
+        });
+      }
+    );
+    
 })
-publish.addEventListener('click',()=>{
-  setDoc(doc(collectionRef,title.value.split(" ").join("-")),{
-    blogTitle:title.innerHTML,
-     blogPost:article.innerHTML,
-     bannerImage:image[0],
-     publishedAt:serverTimestamp()
-     }).then((res)=>{
-       location.href = `/${title.value.split(" ").join('-')}`
-     })
-  })

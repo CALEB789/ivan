@@ -41,7 +41,7 @@
     background:rgba(0,0,0,0.1);
     border-radius:10px;
   }
-  .title,.article{
+  .title,#article{
     width:100%;
     min-height:100px;
     height:auto;
