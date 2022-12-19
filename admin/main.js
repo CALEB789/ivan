@@ -12,6 +12,17 @@ const firebaseConfig = {
   appId: "1:821571669081:web:9d37c68efaea563516f548",
   measurementId: "G-GVPCFPBMSF"
 };
+tinymce.init({
+  selector: 'textarea',
+  plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
+  toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+  tinycomments_mode: 'embedded',
+  tinycomments_author: 'Author name',
+  mergetags_list: [
+    { value: 'First.Name', title: 'First Name' },
+    { value: 'Email', title: 'Email' },
+  ]
+});
 var bg
 const cont = document.getElementById('cont')
 const app = initializeApp(firebaseConfig);
@@ -56,9 +67,11 @@ bannerImage.addEventListener("change",() =>{
     );
     
 })
+tinymce.triggerSave();
+
 publish.addEventListener('click',()=>{
   setDoc(doc(collectionRef,title.value.split(" ").join("-")),{
-     blogPost:article.innerHTML,
+     blogPost:contents,
      bannerImage:bg,
      publishedAt:serverTimestamp()
      }).then((res)=>{
